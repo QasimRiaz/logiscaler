@@ -1,0 +1,93 @@
+<div class="flex w-full flex-col" *transloco="let t">
+    <!-- Edit mode -->
+    <ng-container>
+        <!-- Header -->
+        <div class="relative min-h-40 w-full bg-primary px-8 sm:min-h-48 sm:px-12">
+            <div class="mx-auto flex w-full max-w-3xl items-center justify-end pt-6">
+                <a mat-icon-button [matTooltip]="t('Close')" [routerLink]="['../']">
+                    <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+                </a>
+            </div>
+        </div>
+
+        <!-- Contact form -->
+        <div class="relative flex flex-auto flex-col items-center px-6 sm:px-12">
+            <div class="w-full max-w-3xl">
+                <form [formGroup]="roleForm" class="mt-8" autocomplete="off">
+                    <!-- Avatar -->
+
+
+                    <div class="mt-8" *transloco="let t">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>{{ t('Name') }}</mat-label>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user-circle'"
+                                matPrefix></mat-icon>
+                            <input [formControlName]="'name'" [placeholder]="t('Enter name')" matInput />
+                        </mat-form-field>
+                    </div>
+
+                    <div class="w-full">
+                        <div class="text-xl">Security preferences</div>
+                        <div class="text-secondary">
+                            Keep your account more secure with following preferences.
+                        </div>
+                    </div>
+                    <div class="mt-8 grid w-full gap-6 sm:grid-cols-4">
+                        <!-- 2-step auth -->
+                        <div class="flex items-center justify-between sm:col-span-4">
+                            <div class="flex-auto cursor-pointer" (click)="twoStepToggle.toggle()">
+                                <div class="font-medium leading-6">
+                                    Edit Access
+                                </div>
+                                <div class="text-secondary text-md">
+                                    Allows you to modify existing content or settings within the system.
+                                </div>
+                            </div>
+                            <mat-slide-toggle class="ml-4" [color]="'primary'" [formControlName]="'edit'"
+                                #twoStepToggle>
+                            </mat-slide-toggle>
+                        </div>
+
+                        <div class="flex items-center justify-between sm:col-span-4">
+                            <div class="flex-auto cursor-pointer" (click)="askPasswordChangeToggle.toggle()">
+                                <div class="font-medium leading-6">
+                                    View Access
+                                </div>
+                                <div class="text-secondary text-md">
+                                    Grants read-only access to view content without making any changes.
+                                </div>
+                            </div>
+                            <mat-slide-toggle class="ml-4" [color]="'primary'" [formControlName]="'view'"
+                                #askPasswordChangeToggle>
+                            </mat-slide-toggle>
+                        </div>
+
+                        <div class="flex items-center justify-between sm:col-span-4">
+                            <div class="flex-auto cursor-pointer" (click)="deleteToggle.toggle()">
+                                <div class="font-medium leading-6">
+                                    Delete Access
+                                </div>
+                                <div class="text-secondary text-md">
+                                    Enables the ability to permanently remove content or records from the system.
+                                </div>
+                            </div>
+                            <mat-slide-toggle class="ml-4" [color]="'primary'" [formControlName]="'delete'"
+                                #deleteToggle>
+                            </mat-slide-toggle>
+                        </div>
+
+                    </div>
+                    <div
+                        class="-mx-6 mt-10 flex items-center justify-end border-t bg-gray-50 py-4 pl-1 pr-4 dark:bg-transparent sm:-mx-12 sm:pl-7 sm:pr-12">
+
+                        <button class="ml-2" mat-flat-button [color]="'primary'"
+                            [disabled]="roleForm.invalid || isSaving" [matTooltip]="t('Save')" (click)="updateContact()"
+                            *transloco="let t">
+                            {{ t('Save') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </ng-container>
+</div>

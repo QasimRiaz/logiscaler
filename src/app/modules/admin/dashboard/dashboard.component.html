@@ -1,0 +1,228 @@
+<div class="flex flex-col flex-auto absolute inset-0 overflow-y-auto" *transloco="let t">
+
+    <div class="bg-card">
+        <div class="flex flex-col w-full max-w-screen-xl mx-auto px-6 sm:px-8">
+            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
+
+                <div class="flex flex-auto items-center min-w-0">
+                    <!-- <div class="flex-0 w-16 h-16 rounded-full overflow-hidden">
+                        <img *ngIf="user.avatar" class="w-full h-full object-cover" [src]="user.avatar" />
+                    </div> -->
+                    <div class="flex flex-col min-w-0">
+                        <ng-container>
+                            <div
+                                class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
+                                {{ t("Welcome-back") }}, {{ _loggedInUser.name }}!
+                            </div>
+                        </ng-container>
+                        <!-- <div class="flex items-center">
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:bell'"></mat-icon>
+                            <div class="ml-1.5 leading-6 truncate text-secondary">
+                                You have {{ data.events.length }} Events.
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                @if(_loggedInUser.editAccess){
+                <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
+                    <button class="bg-accent" mat-flat-button [color]="'accent'"
+                        [routerLink]="['/add-ticket/newTicket']">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                        <span class="ml-2">{{ t("New Tickets")}}</span>
+                    </button>
+                </div>
+                }
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+        <div class="w-full max-w-screen-xl mx-auto mb-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 px-6 md:grid-cols-4 gap-6 w-full min-w-0">
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+
+                    <div class="flex flex-col items-center mt-8">
+                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">
+                            {{this.dataSource.data.length}}
+                        </div>
+                        <div class="text-lg font-medium mt-4 text-green-600 dark:text-red-500">
+                            {{ t("Total Tickets")}}
+                        </div>
+
+                    </div>
+                </div>
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex flex-col items-center mt-8">
+                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">
+                            {{ compeletedProjects }}
+                        </div>
+                        <div class="text-lg font-medium  mt-4 text-blue-600 dark:text-red-500">
+                            {{ t("Resolved Tickets")}}
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex flex-col items-center mt-8">
+                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500">
+                            {{ submissions }}
+                        </div>
+                        <div class="text-lg font-medium mt-4 text-red-600 dark:text-red-500">
+                            {{ t("Total Submissions")}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex flex-col items-center mt-8">
+                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-amber-500">
+                            {{ taskDue }}%
+                        </div>
+                        <div class="text-lg font-medium mt-4 text-amber-600 dark:text-amber-500">
+                            {{ t("Progress")}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sm:col-span-4 flex flex-col flex-auto p-3 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                        <div>
+                            <ng-container *transloco="let t">
+                                <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">
+                                    {{t('Tickets')}}
+                                </div>
+                            </ng-container>
+                            <ng-container *transloco="let t">
+                                <div class="text-secondary font-medium">{{t('Total')}}
+                                    {{this.dataSource.data.length}}
+                                </div>
+                            </ng-container>
+
+                        </div>
+                        <div class="flex flex-row justify-between items-center" *transloco="let t">
+
+                            <div class="flex flex-col sm:flex-row items-center py-0 lg:py-2">
+
+                                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64">
+                                    <ng-container *transloco="let t">
+                                        <mat-icon class="icon-size-5" matPrefix>search</mat-icon>
+                                    </ng-container>
+                                    <input matInput (input)="applyFilter($event.target.value)"
+                                        [placeholder]="t('Search')" />
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="flex flex-col flex-auto mx-6 overflow-x-auto">
+                        <table class="w-full bg-transparent overflow-y-visible" mat-table [dataSource]="dataSource"
+                            [trackBy]="trackByFn" matSort>
+
+                            <ng-container matColumnDef="title" *transloco="let t">
+                                <th class="px-2 mt-header" mat-header-cell mat-sort-header *matHeaderCellDef>
+                                    {{t('Title')}}
+                                </th>
+                                <td class="px-2" mat-cell *matCellDef="let account">
+                                    <span class="pr-6 whitespace-nowrap">
+                                        {{account?.title}}
+                                    </span>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="status" *transloco="let t">
+                                <th class="px-2 mt-header" mat-header-cell mat-sort-header *matHeaderCellDef>
+                                    {{t('Status')}}
+                                </th>
+                                <td class="px-2" mat-cell *matCellDef="let account">
+                                    <span
+                                        class="whitespace-nowrap font-semibold rounded-full px-2.5 py-0.5 items-center"
+                                        [ngClass]="{
+                                        'bg-yellow-500 text-white': account.statusId == '2dc86d0d-c5fd-4f10-ad88-19ab7901d304',
+                                        'bg-orange-500 text-white': account.statusId == '59843eae-12f9-4a41-822e-e5e7a391cdd6',
+                                        'bg-amber-500 text-white': account.statusId == '5d4eae50-afb6-4acc-b0ae-794819bdbb2e',
+                                        'bg-red-500 text-white': account.statusId == '03a54152-6610-4b8e-ad39-94731c0116c7',
+                                        'bg-green-500 text-white': account.statusId == '24972ca0-194b-414d-8af8-56a30cd293ba',
+                                        'bg-lime-500 text-white': account.statusId == 'd40f095f-0ee6-46ff-b332-6af5e9d621ed',
+                                }">
+                                        {{account.status}}
+                                    </span>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="admin" *transloco="let t">
+                                <th class="px-2 mt-header" mat-header-cell mat-sort-header *matHeaderCellDef>
+                                    {{t('Admin')}}
+                                </th>
+                                <td class="px-2" mat-cell *matCellDef="let account">
+                                    <span class="pr-6 whitespace-nowrap">
+                                        {{account?.admin}}
+                                    </span>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="description" *transloco="let t">
+                                <th class="px-2 mt-header" mat-header-cell mat-sort-header *matHeaderCellDef>
+                                    {{t('Description')}}
+                                </th>
+                                <td class="px-2" mat-cell *matCellDef="let account">
+                                    <div class="truncate max-w-32" [matTooltip]="account.description">
+                                        {{account?.description}}
+                                    </div>
+                                </td>
+                            </ng-container>
+
+
+
+
+                            <ng-container matColumnDef="createdAt" *transloco="let t">
+                                <th class="px-2 mt-header" mat-header-cell mat-sort-header *matHeaderCellDef>
+                                    {{t('Created At')}}
+                                </th>
+                                <td class="px-2" mat-cell *matCellDef="let account">
+                                    <span class="pr-6 whitespace-nowrap">
+                                        {{ account.createdAt | date:'MMM dd, y @ h:mm a' }}
+                                    </span>
+                                </td>
+                            </ng-container>
+
+
+                            <ng-container matColumnDef="action">
+                                <th class="mt-header" mat-header-cell mat-sort-header *matHeaderCellDef>
+                                    {{t('Action')}}
+                                </th>
+                                <td class="pr-2" mat-cell *matCellDef="let account">
+                                    <div class="flex mt-2">
+                                        @if(this._loggedInUser.editAccess ){
+                                        <span class="font-medium mr-2 whitespace-nowrap">
+                                            <a [routerLinkActive]="'active'"
+                                                [routerLink]="['/add-ticket/' + account.id ]">
+                                                <button [matTooltip]="t('Edit Ticket')">
+                                                    <mat-icon class="icon-size-7" color="accent">edit</mat-icon>
+                                                </button>
+                                            </a>
+                                        </span>
+                                        }
+                                        @if(this._loggedInUser.deleteAccess){
+                                        <span class="font-medium ml-1 whitespace-nowrap">
+                                            <button (click)="deleteTicket(account)" [matTooltip]="t('Delete Ticket')">
+                                                <mat-icon class="icon-size-7" [svgIcon]="'heroicons_solid:delete'"
+                                                    color="warn"></mat-icon>
+                                            </button>
+                                        </span>
+                                        }
+                                    </div>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+                            <tr class="order-row h-16" mat-row *matRowDef="let row; columns: tableColumns;">
+                            </tr>
+                        </table>
+                        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5,20, 50, 80, 100]"></mat-paginator>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

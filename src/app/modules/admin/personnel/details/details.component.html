@@ -1,0 +1,245 @@
+<div class="flex w-full flex-col" *transloco="let t">
+    <!-- Edit mode -->
+    <ng-container>
+        <!-- Header -->
+        <div class="relative min-h-40 w-full bg-primary px-8 sm:min-h-48 sm:px-12">
+            <div class="mx-auto flex w-full max-w-3xl items-center justify-end pt-6">
+                <a mat-icon-button [matTooltip]="t('Close')" [routerLink]="['../']">
+                    <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+                </a>
+            </div>
+        </div>
+
+        <!-- Contact form -->
+        <div class="relative flex flex-auto flex-col items-center px-6 sm:px-12">
+            <div class="w-full max-w-3xl">
+                <form [formGroup]="personnelForm" class="mt-8" autocomplete="off">
+                    <!-- Avatar -->
+                    <div class="-mt-24 flex flex-auto items-end">
+                        <div
+                            class="ring-bg-card relative flex h-32 w-32 items-center justify-center overflow-hidden rounded-full ring-4">
+                            <!-- Upload / Remove avatar -->
+                            <div class="absolute inset-0 z-10 bg-black bg-opacity-50"></div>
+                            <div class="absolute inset-0 z-20 flex items-center justify-center">
+                                <div>
+                                    <input id="avatar-file-input"
+                                        class="pointer-events-none invisible absolute h-0 w-0 opacity-0" type="file"
+                                        [multiple]="false" [accept]="
+                                            'image/jpeg, image/png, image/jpg' 
+                                        " (change)="uploadAvatar(avatarFileInput.files)" #avatarFileInput />
+                                    <label
+                                        class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full hover:bg-hover"
+                                        for="avatar-file-input" matRipple>
+                                        <mat-icon [matTooltip]="t('Add profile photo')" class="text-white" [svgIcon]="
+                                                'heroicons_outline:camera'
+                                            "></mat-icon>
+                                    </label>
+                                </div>
+                                <div>
+                                    <button mat-icon-button (click)="removeAvatar()">
+                                        <mat-icon [matTooltip]="t('Remove profile photo')" class="text-white" [svgIcon]="
+                                                'heroicons_outline:trash'
+                                            "></mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Image/Letter -->
+                            <!-- @if (user.pictureUrl) {
+                            <img class="h-full w-full object-cover" [src]="user.pictureUrl" />
+                            } -->
+                            @if (this.pictureUrl) {
+                            <img class="h-full w-full object-cover" [src]="pictureUrl" />
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mt-8" *transloco="let t">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>{{ t('First Name') }}</mat-label>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user-circle'"
+                                matPrefix></mat-icon>
+                            <input [formControlName]="'firstName'" [placeholder]="t('Enter first name')" matInput />
+                        </mat-form-field>
+                    </div>
+
+                    <div class="mt-8" *transloco="let t">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>{{ t('Last Name') }}</mat-label>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user-circle'"
+                                matPrefix></mat-icon>
+                            <input [formControlName]="'lastName'" [placeholder]="t('Enter last name')" matInput />
+                        </mat-form-field>
+                    </div>
+
+                    <div class="mt-8" *transloco="let t">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>{{ t('Email') }}</mat-label>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:envelope'" matPrefix></mat-icon>
+                            <input id="email" [formControlName]="'email'" [placeholder]="t('Enter email')" matInput [readonly]="!showPassword" />
+                            @if(personnelForm.get('email')?.hasError('emailExists')) {
+                            <mat-error> {{ t('Email already exists.') }}</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <!-- <div class="mt-8" *transloco="let t">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>{{ t('Phone') }}</mat-label>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:bars-3-bottom-left'"
+                                matPrefix></mat-icon>
+                            <input id="email" [formControlName]="'phone'" matInput />
+                            @if (
+                            personnelForm.get('phone').hasError('required')
+                            ) {
+                            <mat-error>Phone is required.</mat-error>
+                            }
+                        </mat-form-field>
+                    </div> -->
+                    <div class="mt-8">
+                        <div class="space-y-4" *transloco="let t">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>{{ t('Role') }}</mat-label>
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:bars-3-bottom-left'"
+                                    matPrefix></mat-icon>
+                                <mat-select [formControlName]="'role'" [placeholder]="t('Select Role')"
+                                    >
+                                    @for (
+                                    option of roles;
+                                    track trackByFn($index, option)
+                                    ) {
+                                    <mat-option [value]="option.id">{{
+                                        option.name
+                                        }}</mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <!-- <div class="mt-8">
+                        <div class="space-y-4" *transloco="let t">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>{{ t('Company') }}</mat-label>
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:bars-3-bottom-left'"
+                                    matPrefix></mat-icon>
+                                <mat-select [placeholder]="t('Select Company')" [formControlName]="'company'">
+                                    @for (
+                                    option of company;
+                                    track trackByFn($index, option)
+                                    ) {
+                                    <mat-option [value]="option.id">{{
+                                        option.name
+                                        }}</mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+                    <!-- <div class="mt-8">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>{{ t('Company') }}</mat-label>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:building-office-2'"
+                                matPrefix></mat-icon>
+                            <input type="text" [readonly]="isCompanyFieldReadOnly()" [placeholder]="t('Select Company')"
+                                aria-label="Number" matInput [formControlName]="'company'" [matAutocomplete]="auto">
+                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
+                                @for (
+                                option of filteredOptions | async;
+                                track trackByFn($index, option)
+                                ) {
+                                <mat-option [value]="option">{{
+                                    option.name
+                                    }}</mat-option>
+                                }
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div> -->
+                    <!-- Role -->
+
+
+                    <!-- Company -->
+                    <!-- <div class="mt-8" *ngIf="userRole == 2 || showCompany==true">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Company</mat-label>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:building-office-2'"
+                                matPrefix></mat-icon>
+                            <input id="company" type="text" placeholder="Pick one" aria-label="Number" matInput
+                                [formControlName]="'company'" [matAutocomplete]="auto"
+                                [readonly]="isCompanyFieldReadOnly()">
+                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
+                                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                                    {{option.title}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div> -->
+
+                    <!-- Email -->
+                    @if(showPassword || resetPassword) {
+                    <div class="mt-8">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>{{ t('Password') }}</mat-label>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
+                            <input id="pasasworda" matInput [placeholder]="t('Enter Password')" type="text"
+                                [formControlName]="'password'" minlength="6" autocomplete="current-password"
+                                #passwordField />
+                            <button mat-icon-button type="button" (click)="
+                                    passwordField.type === 'password'
+                                        ? (passwordField.type = 'text')
+                                        : (passwordField.type = 'password')
+                                " matSuffix>
+                                @if (passwordField.type === 'password') {
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                                }@else if(passwordField.type === 'text') { <mat-icon class="icon-size-5"
+                                    [svgIcon]="'heroicons_solid:eye-slash'"></mat-icon>
+                                }
+                            </button>
+                            @if(showPassword && personnelForm.get('password').hasError('required')) {
+                            <mat-error>{{ t('Password is required.') }}</mat-error>
+                            }
+                            @if(showPassword && personnelForm.get('password').hasError('minlength')) {
+                            <mat-error>{{ t('Password must be at least 6 characters.') }}</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+                    }
+                    <!-- @if(showPassword){
+
+                    <div class="flex mt-8 items-center justify-between">
+                        <div class="flex-auto cursor-pointer" (click)="step.toggle()">
+                            <div class="leading-6 ml-1 text-lg text-secondary font-medium">Send Welcome Email
+                            </div>
+                        </div>
+                        <mat-slide-toggle class="ml-4" [color]="'primary'" checked
+                            (change)="onSlideToggleChange($event)" #step></mat-slide-toggle>
+                    </div>
+                    }
+                    @if(emailCheck && showPassword){
+                    <div class="mt-8">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>Welcome Email Template</mat-label>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:mail'" matPrefix></mat-icon>
+                            <mat-select [(value)]="selectedEmailTemplate" placeholder="Select template"
+                                (selectionChange)="templateChange($event)">
+                                <mat-option *ngFor="let option of _welcomeEmailTemplate"
+                                    [value]="option">{{option.title}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>} -->
+
+                    <!-- Password -->
+
+                    <!-- Actions -->
+                    <div
+                        class="-mx-6 mt-10 flex items-center justify-end border-t bg-gray-50 py-4 pl-1 pr-4 dark:bg-transparent sm:-mx-12 sm:pl-7 sm:pr-12">
+
+                        <button class="ml-2" mat-flat-button [color]="'primary'"
+                            [disabled]="personnelForm.invalid || isSaving" [matTooltip]="t('Save')"
+                            (click)="updateContact()" *transloco="let t">
+                            {{ t('Save') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </ng-container>
+</div>

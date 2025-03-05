@@ -1,0 +1,17 @@
+{
+  "welcomeEmailTemplate": {
+    "title": "Welkomstmail",
+    "subject": "Welkom bij de IVO-app",
+    "template": "<p>Beste {{firstName}} {{lastName}},</p><p>Welkom bij IVO!</p><p>We zijn blij dat je aan boord bent. Hieronder staan je inloggegevens:</p><ul><li>E-mail: {{email}}</li><li>Wachtwoord: {{password}}</li></ul><p>Je kunt de IVO-app openen via de volgende link: <a href='{{appURL}}'>{{appURL}}</a></p><p>Met vriendelijke groet,<br>Het IVO-team</p>"
+  },
+  "projectAssignmentEmailTemplate": {
+    "title": "Projecttoewijzing",
+    "subject": "Je bent toegewezen aan een project",
+    "template": "<p>Beste {{firstName}} {{lastName}},</p><p>We zijn verheugd je te informeren dat je bent toegewezen aan het project <strong>{{projectName}}</strong> als <strong>{{role}}</strong>. Bekijk de projectdetails en laat het ons weten als je vragen hebt.</p><p>Je kunt de IVO-app openen via de volgende link: <a href='{{appURL}}'>{{appURL}}</a></p><p>Met vriendelijke groet,<br>Het IVO-team</p>"
+  },
+  "taskSubmissionEmailTemplate": {
+    "title": "Taak ingediend",
+    "subject": "Melding taakindiening",
+    "template": "<p>Beste {{ownerFirstName}} {{ownerLastName}},</p><p>We zijn verheugd je te informeren dat <strong>{{submitterName}}</strong> de taak <strong>{{taskName}}</strong> heeft ingediend in het project <strong>{{projectName}}</strong>.</p><p>Je kunt de IVO-app openen via de volgende link: <a href='{{appURL}}'>{{appURL}}</a></p><p>Als je vragen hebt of verdere details nodig hebt, laat het ons dan weten.</p><p>Met vriendelijke groet,<br>Het IVO-team</p>"
+  }
+}
